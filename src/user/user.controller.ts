@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, UsePipes } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Param,
+  Delete,
+  ParseIntPipe,
+  HttpStatus,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto';
 
@@ -6,13 +15,35 @@ import { CreateUserDto } from './dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get()
-  getUser() {
-    return this.userService.findAll();
+  @Get(':id')
+  async findOne(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    userId: number,
+  ) {
+    return await this.userService.findOne(userId);
   }
 
-  @Post('register')
-  registerUser(@Body() userData: CreateUserDto) {
-    return this.userService.create(userData);
+  @Get()
+  async findAll() {
+    return await this.userService.findAll();
+  }
+
+  @Post('create')
+  async create(@Body() userData: CreateUserDto) {
+    return await this.userService.create(userData);
+  }
+
+  @Delete(':id')
+  async remove(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    userId: number,
+  ) {
+    return await this.userService.remove(userId);
   }
 }

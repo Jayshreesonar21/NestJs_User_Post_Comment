@@ -12,8 +12,26 @@ export class UserService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  findAll(): Promise<User[]> {
-    return this.usersRepository.find();
+  async findAll(): Promise<User[]> {
+    try {
+      const users = await this.usersRepository.find({
+        where: { isDeleted: false },
+      });
+      return users;
+    } catch (err) {
+      console.log(':::::: FindAll user error :::::: ', err);
+    }
+  }
+
+  async findOne(userId: number): Promise<User> {
+    try {
+      const user = await this.usersRepository.findOne({
+        where: { id: userId, isDeleted: false },
+      });
+      return user;
+    } catch (err) {
+      console.log(':::::: FindOne user error :::::: ', err);
+    }
   }
 
   async create(userData: CreateUserDto): Promise<UserData> {
@@ -26,7 +44,21 @@ export class UserService {
       });
       return user;
     } catch (err) {
-      console.log(':::::: Register user error :::::: ', err);
+      console.log(':::::: Create user error :::::: ', err);
+    }
+  }
+
+  async remove(userId: number): Promise<{ message: string }> {
+    try {
+      await this.usersRepository
+        .createQueryBuilder('user')
+        .update(User)
+        .set({ isDeleted: true })
+        .where('id = :id', { id: userId })
+        .execute();
+      return { message: 'Record deleted successfully' };
+    } catch (err) {
+      console.log(':::::::: Delete user error :::::::', err);
     }
   }
 }
