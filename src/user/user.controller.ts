@@ -2,15 +2,18 @@ import {
   Body,
   Controller,
   Get,
-  Post,
   Param,
   Delete,
   ParseIntPipe,
   HttpStatus,
+  Put,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto';
+import { UpdateUserDto } from './dto';
+import { IsExistInterceptor } from './user.interceptor';
 
+@UseInterceptors(IsExistInterceptor)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -31,11 +34,6 @@ export class UserController {
     return await this.userService.findAll();
   }
 
-  @Post('create')
-  async create(@Body() userData: CreateUserDto) {
-    return await this.userService.create(userData);
-  }
-
   @Delete(':id')
   async remove(
     @Param(
@@ -45,5 +43,17 @@ export class UserController {
     userId: number,
   ) {
     return await this.userService.remove(userId);
+  }
+
+  @Put(':id')
+  async update(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    userId: number,
+    @Body() userData: UpdateUserDto,
+  ) {
+    return await this.userService.update(userId, userData);
   }
 }

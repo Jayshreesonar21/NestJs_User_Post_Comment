@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 ConfigModule.forRoot({ envFilePath: '.env' });
 
@@ -19,6 +20,7 @@ ConfigModule.forRoot({ envFilePath: '.env' });
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
+    AuthModule,
     UserModule,
   ],
   controllers: [AppController],
