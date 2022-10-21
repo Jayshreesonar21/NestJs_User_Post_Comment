@@ -1,27 +1,25 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
-
-ConfigModule.forRoot({ envFilePath: '.env' });
+import { UserModule } from './modules/user/user.module';
+import { AuthModule } from './modules/auth/auth.module';
+import environmentConfig from './config';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT),
-      username: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
+      host: environmentConfig.DATABASE_CONFIG.HOST,
+      port: Number(environmentConfig.DATABASE_CONFIG.PORT),
+      username: environmentConfig.DATABASE_CONFIG.USER,
+      password: environmentConfig.DATABASE_CONFIG.PASSWORD,
+      database: environmentConfig.DATABASE_CONFIG.NAME,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
-    AuthModule,
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

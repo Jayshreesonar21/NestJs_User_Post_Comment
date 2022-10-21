@@ -26,16 +26,21 @@ export class IsExistInterceptor implements NestInterceptor {
   ): Observable<any> | Promise<Observable<any>> {
     return next.handle().pipe(
       tap(async () => {
-        const request = context.switchToHttp().getRequest();
-        const userId = request.params?.id;
-        if (userId) {
-          const user = await this.usersRepository.findOne({
-            where: { id: Number(userId), isDeleted: false },
-          });
+        try {
+          const request = context.switchToHttp().getRequest();
+          const userId = request.params?.id;
+          if (userId) {
+            const user = await this.usersRepository.findOne({
+              where: { id: Number(userId), isDeleted: false },
+            });
 
-          if (!user) {
-            throw new HttpException('User not found.', HttpStatus.NOT_FOUND);
+            if (!user) {
+              throw new HttpException('User not found.', HttpStatus.NOT_FOUND);
+            }
           }
+        } catch (err) {
+          console.log(err);
+          return err;
         }
       }),
     );

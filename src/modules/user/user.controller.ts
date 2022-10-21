@@ -8,11 +8,14 @@ import {
   HttpStatus,
   Put,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto';
 import { IsExistInterceptor } from './user.interceptor';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @UseInterceptors(IsExistInterceptor)
 @Controller('user')
 export class UserController {
