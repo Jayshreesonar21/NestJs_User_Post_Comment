@@ -87,3 +87,8 @@ Nest is [MIT licensed](LICENSE).
 ## To run seeder
 
 - npm run seed
+
+## Swagger
+
+- URL - http://localhost:3000/api
+-

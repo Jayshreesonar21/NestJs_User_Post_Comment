@@ -14,9 +14,12 @@ import { UserService } from './user.service';
 import { UpdateUserDto } from './dto';
 import { IsExistInterceptor } from './user.interceptor';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @UseInterceptors(IsExistInterceptor)
+@ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
