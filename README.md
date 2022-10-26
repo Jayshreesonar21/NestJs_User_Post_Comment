@@ -71,3 +71,14 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+## To run application 
+- npm run start:dev
+
+# Migration (https://wanago.io/2022/07/25/api-nestjs-database-migrations-typeorm/)
+
+- To run migration - npm run typeorm:run-migrations
+- To revert migration - npm run typeorm:revert-migration
+- To generate empty migration file - npm run typeorm:create-migration --name=PostCreationDate
+- To generate migration for entities - npm run typeorm:generate-migration --name=CreatePost
+
