@@ -38,11 +38,6 @@ export class AuthService {
 
   async register(userData: RegisterUserDto): Promise<UserData> {
     try {
-      const { email } = userData;
-      const isExist = await this.userService.getUserByEmail(email);
-      if (isExist) {
-        throw new BadRequestException('User already exist.');
-      }
       const user = await this.userService.register(userData);
       return user;
     } catch (err) {

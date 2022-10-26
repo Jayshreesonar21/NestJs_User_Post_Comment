@@ -17,9 +17,6 @@
     "migrationsDir": "src/migrations"
     },
     "seeds": [
-    "/usr/src/eliteopinio/backend/dist/**/entities/*.seeder.{js,ts}"
-    ],
-    "factories": [
-    "/usr/src/eliteopinio/backend/dist/**/entities/*.factory.{js,ts}"
+    "src/seeds/*.ts"
     ]
 }

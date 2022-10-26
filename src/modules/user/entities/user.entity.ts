@@ -6,33 +6,39 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BeforeInsert,
-  getConnection,
-  getRepository,
-  getConnectionManager,
 } from 'typeorm';
-import { BadRequestException } from '@nestjs/common';
 import { IsEmail, MinLength, MaxLength } from 'class-validator';
-import environmentConfig from '../../config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import Connection from 'mysql2/typings/mysql/lib/Connection';
-import { createConnection } from 'net';
+import environmentConfig from '../../../config';
+import { UserRole } from '../role.enum';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: false })
   username: string;
 
-  @Column()
+  @Column({ nullable: false, unique: true })
   @IsEmail()
   email: string;
 
-  @Column()
+  @Column({ nullable: false })
   @MinLength(8)
   @MaxLength(16)
   password: string;
+
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.USER,
+  })
+  role: UserRole;
+
+  @Column({
+    default: null,
+  })
+  profile: string;
 
   @Column({ default: false })
   isDeleted: boolean;
@@ -52,7 +58,7 @@ export class User {
 
   @BeforeInsert()
   async bcryptPassword() {
-    const saltOrRounds = Number(environmentConfig.BCRYPT.SALT);
+    const saltOrRounds = parseInt(environmentConfig.BCRYPT.SALT);
     const hash = await bcrypt.hash(this.password, saltOrRounds);
     this.password = hash;
   }

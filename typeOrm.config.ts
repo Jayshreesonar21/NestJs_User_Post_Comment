@@ -1,7 +1,9 @@
-import { DataSource } from 'typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
+import { SeederOptions } from 'typeorm-extension';
 import environmentConfig from './src/config';
+import { MainSeeder } from './src/seeds/MainSeeder';
 
-export default new DataSource({
+const option: DataSourceOptions & SeederOptions = {
   type: 'mysql',
   host: environmentConfig.DATABASE_CONFIG.HOST,
   port: parseInt(environmentConfig.DATABASE_CONFIG.PORT),
@@ -10,4 +12,7 @@ export default new DataSource({
   database: environmentConfig.DATABASE_CONFIG.NAME,
   entities: ['./src/**/*.entity{.ts,.js}'],
   migrations: ['./src/migrations/*.ts'],
-});
+  seeds: [MainSeeder],
+};
+
+export default new DataSource(option);

@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UpdateUserDto } from './dto';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
+import { User } from './entities/user.entity';
 import { RegisterUserDto } from '../auth/dto';
 
 @Injectable()
@@ -90,7 +90,11 @@ export class UserService {
       return await this.usersRepository.save(user);
     } catch (err) {
       console.log(':::::: Register user error :::::: ', err);
-      return err;
+      if (err.code === 'ER_DUP_ENTRY') {
+        throw new BadRequestException('User already exist.');
+      } else {
+        return err.message;
+      }
     }
   }
 }
